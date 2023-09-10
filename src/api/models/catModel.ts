@@ -1,43 +1,48 @@
-// TODO: mongoose schema for cat
+const mongoose = require('mongoose');
+const Schema = mongoose;
 
-import {Schema, model} from 'mongoose';
-import {Cat} from '../../interfaces/Cat';
-
-const catSchema = new Schema<Cat>({
+export const catSchema = mongoose.Schema({
   cat_name: {
     type: String,
-    required: true,
-    unique: true,
-    minlength: 3,
   },
   weight: {
     type: Number,
-    required: true,
   },
   filename: {
     type: String,
-    required: true,
   },
   birthdate: {
-    type: Date,
-    required: true,
+    type: String,
   },
   location: {
     type: {
       type: String,
-      enum: ['Point'],
-      required: true,
     },
-    coordinates: {
-      type: [Number],
-      required: true,
+    lat: {
+      type: Number,
+    },
+    lon: {
+      type: Number,
     },
   },
   owner: {
-    type: Schema.Types.ObjectId,
-    ref: 'User',
-    required: true,
+    _id: {
+      type: Schema.Types.ObjectId,
+      reqired: true,
+    },
+    user_name: {
+      type: String,
+      reqired: true,
+    },
+    email: {
+      type: String,
+      reqired: true,
+    },
   },
 });
 
-export default model<Cat>('Cat', catSchema);
+const Cat = mongoose.model('Cat', catSchema);
+
+module.exports = Cat;
+
+export default Cat;

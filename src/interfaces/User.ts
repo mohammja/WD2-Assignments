@@ -21,7 +21,7 @@ type LoginUser = {
 
 interface TokenUser {
   _id: string;
-  role: 'admin' | 'user';
+  role: 'Admin' | 'User';
 }
 
 type UserTest = Partial<User>;

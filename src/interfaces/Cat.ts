@@ -1,15 +1,17 @@
-// TODO: cat interface
-import {Point} from 'geojson';
-import {Document} from 'mongoose';
-import {UserOutput} from './User';
-
-interface Cat extends Document {
+export interface Cat {
+  _id: any;
   cat_name: string;
   weight: number;
   filename: string;
-  birthdate: Date;
-  location: Point;
-  owner: UserOutput;
+  birthdate: string;
+  location: {
+    type: string;
+    lat: number;
+    lon: number;
+  };
+  owner: {
+    _id: number;
+    user_name: string;
+    email: string;
+  };
 }
-
-export {Cat};

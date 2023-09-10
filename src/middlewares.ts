@@ -70,13 +70,7 @@ const getCoordinates = (req: Request, res: Response, next: NextFunction) => {
     next();
   }
 };
-// explanation of the makeThumbnail middleware:
-// https://www.youtube.com/watch?v=3f5Q9wDePzY
-// basically, we use the sharp library to resize the image to 160x160 pixels
-// and save it as a png file with the same name as the original file + '_thumb'
-// for example, if the original file is 'cat.jpg', the thumbnail will be 'cat.jpg_thumb'
 
-// if it fails, we throw an error and to fix the error, we need to install the sharp library with npm install sharp --save and npm install @types/sharp --save-dev
 const makeThumbnail = async (
   req: Request,
   res: Response,
