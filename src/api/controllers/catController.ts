@@ -13,9 +13,16 @@ const catGetByUser = async (
   next: NextFunction
 ) => {
   const user: User = req.user as User;
-  const cats: Cat[] = await catModel.find({owner: user._id});
-  res.json(cats);
-  next(cats);
+  console.log(user._id);
+  const cats: Cat[] = await catModel.find({
+    'owner._id': user._id,
+  });
+  console.log(cats);
+  if (cats.length > 0) {
+    res.json(cats);
+  } else {
+    next(new CustomError('Cats not found', 404));
+  }
 };
 
 // catGetByBoundingBox - get all cats by bounding box coordinates (getJSON)
@@ -62,25 +69,31 @@ const catDeleteAdmin = async (
   res: Response,
   next: NextFunction
 ) => {
-  const {id} = req.params;
-  const user: User = req.user as User;
-  if (user.role !== 'Admin') {
-    next(new CustomError('Only admin can change cat owner', 403));
-    return;
-  }
-  const cat: Cat = await catModel.findByIdAndDelete(id);
+  const user = req.user as User;
+  const cat = await catModel.findById(req.params.id);
+  console.log(cat);
   if (!cat) {
     next(new CustomError('Cat not found', 404));
     return;
   }
+  console.log(user.role);
+  if (user.role === 'User') {
+    next(new CustomError('Only admin can delete cat', 403));
+    return;
+  }
+  //Deleting cat
+  const deletedCat = await catModel.deleteOne({_id: cat._id});
+  console.log(deletedCat);
   res.json({message: 'cat deleted', data: cat});
-  next(cat);
+  return;
 };
 
+//Should delete cat by id and the owner should be the current user
+
 const catDelete = async (req: Request, res: Response, next: NextFunction) => {
-  const {id} = req.params;
-  const user: User = req.user as User;
-  const cat: Cat = await catModel.findById(id);
+  const user = req.user as User;
+  const cat = await catModel.findById(req.params.id);
+  console.log(cat);
   if (!cat) {
     next(new CustomError('Cat not found', 404));
     return;
@@ -93,9 +106,11 @@ const catDelete = async (req: Request, res: Response, next: NextFunction) => {
     next(new CustomError('Only owner can delete cat', 403));
     return;
   }
-  catModel.findByIdAndDelete(id);
+  //Deleting cat
+  const deletedCat = await catModel.deleteOne({_id: cat._id});
+  console.log(deletedCat);
   res.json({message: 'cat deleted', data: cat});
-  next(cat);
+  return;
 };
 
 const catPut = async (req: Request, res: Response, next: NextFunction) => {

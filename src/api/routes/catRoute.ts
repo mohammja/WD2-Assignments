@@ -35,6 +35,9 @@ router
   .route('/')
   .get(catListGet)
   .post(
+    body('cat_name').isString().escape(),
+    body('birthdate').isDate().escape(),
+    body('weight').isNumeric().escape(),
     passport.authenticate('jwt', {session: false}),
     upload.single('cat'),
     makeThumbnail,
@@ -50,16 +53,31 @@ router
 
 router
   .route('/admin/:id')
-  .put(passport.authenticate('jwt', {session: false}), catPutAdmin)
+  .put(
+    body('cat_name').optional().isString().escape(),
+    body('birthdate').optional().isDate().escape(),
+    body('weight').optional().isNumeric().escape(),
+    param('id').isMongoId().notEmpty().escape(),
+    passport.authenticate('jwt', {session: false}),
+    catPutAdmin
+  )
   .delete(passport.authenticate('jwt', {session: false}), catDeleteAdmin);
 
 router
   .route('/:id')
-  .get(param('id'), catGet)
-  .put(passport.authenticate('jwt', {session: false}), param('id'), catPut)
-  .delete(
+  .get(param('id').notEmpty().isMongoId().escape(), catGet)
+  .put(
+    body('cat_name').optional().isString().escape(),
+    body('birthdate').optional().isDate().escape(),
+    body('weight').optional().isNumeric().escape(),
+    param('id').notEmpty().isMongoId().escape(),
     passport.authenticate('jwt', {session: false}),
     param('id'),
+    catPut
+  )
+  .delete(
+    passport.authenticate('jwt', {session: false}),
+    param('id').notEmpty().isMongoId().escape(),
     catDelete
   );
 
