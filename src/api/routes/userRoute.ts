@@ -1,10 +1,10 @@
 import express from 'express';
 import {
+  userListGet,
   // check,
   // checkToken,
   // userDelete,
-  // userGet,
-  // userListGet,
+  userGet,
   userPost,
   // userPut,
 } from '../controllers/userController';
@@ -12,8 +12,7 @@ import {
 
 const router = express.Router();
 
-router.route('/').post(userPost);
-// .get(userListGet)
+router.route('/').post(userPost).get(userListGet);
 // .put(authenticate, userPut)
 // .delete(authenticate, userDelete);
 
@@ -21,6 +20,6 @@ router.route('/').post(userPost);
 
 // router.route('/check').get(check);
 
-// router.route('/:id').get(userGet);
+router.route('/:id').get(userGet);
 
 export default router;

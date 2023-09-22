@@ -7,7 +7,7 @@ interface User extends Document {
 }
 
 interface OutputUser {
-  id: string;
+  id?: string;
   full_name: string;
   email: string;
 }

@@ -33,8 +33,8 @@ const userPost = async (
     }
 
     const user = req.body;
+    console.log('postUser', user);
     user.password = await bcrypt.hash(user.password, 12);
-    user.role = 'user';
 
     const newUser = await userModel.create(user);
     const response: DBMessageResponse = {
@@ -48,8 +48,49 @@ const userPost = async (
 
     res.json(response);
   } catch (error) {
+    console.log(error);
     next(new CustomError('User creation failed', 500));
   }
 };
 
-export {userPost};
+const userListGet = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const users = await userModel.find().select('-password -role -__v');
+    const response: DBMessageResponse = {
+      message: 'Users found',
+      data: users,
+    };
+
+    res.json(response);
+  } catch (error) {
+    next(new CustomError('Users not found', 500));
+  }
+};
+
+const userGet = async (
+  req: Request<{id: string}, {}, {}>,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const user = await userModel
+      .findById(req.params.id)
+      .select('-password -role -__v');
+
+    if (!user) {
+      next(new CustomError('User not found', 404));
+      return;
+    }
+
+    const response: DBMessageResponse = {
+      message: 'User found',
+      data: user,
+    };
+
+    res.json(response);
+  } catch (error) {
+    next(new CustomError('User not found', 500));
+  }
+};
+
+export {userPost, userListGet, userGet};
