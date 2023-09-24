@@ -30,3 +30,7 @@ Convert the REST API from last weeks assignment to GraphQL.
 
 - No authentication and authorization this week. All mutations are done with id properties. So no need to use req.user.
 - Always empty your cats and users after tests.
+
+
+all tests passed :
+![Passed tests](https://github.com/mohammja/WD2-Assignments/assets/100207859/c4d2f8c3-796b-4c68-a971-cabd5926b431)
