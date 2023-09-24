@@ -12,17 +12,17 @@ import userModel from '../models/userModel';
 
 export default {
   Query: {
-    async users(_: undefined, args: User) {
+    users: async () => {
       return await userModel.find();
     },
-    async userById(_: undefined, args: User) {
+    userById: async (_: undefined, args: User) => {
       console.log(args.id);
       return await userModel.findById(args.id);
     },
   },
 
   Mutation: {
-    async createUser(_: undefined, args: User) {
+    createUser: async (_: undefined, args: User) => {
       const newUser = new userModel({
         user_name: args.user_name,
         email: args.email,
@@ -30,13 +30,12 @@ export default {
       await newUser.save();
       return newUser;
     },
-    async updateUser(_: undefined, args: User) {
+    updateUser: async (_: undefined, args: User) => {
       return await userModel.findByIdAndUpdate(args.id, args, {
         new: true,
       });
     },
-    // args should be the id of the user to delete
-    async deleteUser(_: undefined, args: {id: String}) {
+    deleteUser: async (_: undefined, args: {id: String}) => {
       return await userModel.findByIdAndDelete(args.id);
     },
   },

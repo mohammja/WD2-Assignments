@@ -16,10 +16,10 @@ import userModel from '../models/userModel';
 
 export default {
   Query: {
-    async cats() {
+    cats: async () => {
       return await catModel.find();
     },
-    async catById(_: undefined, args: Cat) {
+    catById: async (_: undefined, args: Cat) => {
       console.log(args.id);
       const cat = await catModel.findById(args.id).populate('owner');
       if (!cat) {
@@ -31,16 +31,16 @@ export default {
 
       return cat;
     },
-    async catsByOwner(_: undefined, args: Cat) {
+    catsByOwner: async (_: undefined, args: Cat) => {
       return await catModel.find({owner: args.owner});
     },
-    async catsByArea(_: undefined, args: {area: string}) {
+    catsByArea: async (_: undefined, args: {area: string}) => {
       return await catModel.find({area: args.area});
     },
   },
 
   Mutation: {
-    async createCat(_: undefined, args: Cat) {
+    createCat: async (_: undefined, args: Cat) => {
       console.log(args);
       //Get owner
       const owner = await userModel.findById(args.owner);
@@ -53,7 +53,7 @@ export default {
       console.log(newCat);
       return newCat;
     },
-    async updateCat(_: undefined, args: Cat) {
+    updateCat: async (_: undefined, args: Cat) => {
       return await catModel.findByIdAndUpdate(
         args.id,
         {...args},
@@ -62,7 +62,7 @@ export default {
         }
       );
     },
-    async deleteCat(_: undefined, args: Cat) {
+    deleteCat: async (_: undefined, args: Cat) => {
       return await catModel.findByIdAndDelete(args.id);
     },
   },
